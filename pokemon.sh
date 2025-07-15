@@ -7,7 +7,7 @@ summon_wild_pokemon () {
     local FOUND_POKEMON=$(find "${POKEMON_WORLD}" -maxdepth 1 -name "${POKEDEX_ID}*.txt" 2>/dev/null)
     
     if [[ -n "${FOUND_POKEMON}" ]]; then
-        cat ${FOUND_POKEMON}
+        cat "${FOUND_POKEMON}"
     else
         echo "Found missingo! Please verify the pokedex in ${POKEMON_WORLD}/."
     fi
@@ -41,7 +41,7 @@ summon_pokemon () {
     local POKEMON=$(echo ${POKEDEX_FILE} | head -c -5 | tail -c +4)
     
     if [[ "${WANTED_POKEMON}" == "${POKEDEX_ID}" || "${WANTED_POKEMON}" == "${POKEMON}" ]]; then
-        cat ${FOUND_POKEMON}
+        cat "${FOUND_POKEMON}"
     else
         cat ${POKEMON_WORLD}"/glitchy_cave/missingno.txt"
         echo "${MISSINGNO_MSG}"
@@ -52,10 +52,10 @@ summon_pokemon () {
 # this will summon all ascii pokemon in the terminal
 summon_all_pokemon () {
     local POKEMON_WORLD="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)""/ascii"
-    local FOUND_POKEMON=$(ls -d "${POKEMON_WORLD}"/*.txt 2>/dev/null)
+    mapfile -t FOUND_POKEMON < <(find "${POKEMON_WORLD}" -maxdepth 1 -name "*${WANTED_POKEMON}*.txt" -type f 2>/dev/null | sort)
     
     if [[ -n "${FOUND_POKEMON}" ]]; then
-        cat ${FOUND_POKEMON}
+        cat "${FOUND_POKEMON[@]}"
     else
         echo "Every pokemon have gone missing! Please verify the pokedex in ${POKEMON_WORLD}/."
     fi
